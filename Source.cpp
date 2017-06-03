@@ -8,60 +8,88 @@ using namespace std;
 	//if data values are the same, the root will be saved to the left
 */
 
+template <class T>
 struct BstNode {
-	int data;
+	T data;
 	BstNode* left;
 	BstNode* right;
 };
 
-BstNode* getNewNode(int data){
-	BstNode* newNode = new BstNode();
-	newNode->data = data;
-	newNode->left = NULL;
-	newNode->right = NULL;
-	return newNode;
-}
+template <class T>
+class BstRoot{
+private:
 
-BstNode* Insert(BstNode* root, int data) {
-	if (root == NULL){
-		root = getNewNode(data);
+	BstNode<T>* root = NULL;
+
+public:
+
+	BstRoot(){
 	}
-	//if data values are the same, the root will be saved to the left
-	else if (data <= root->data){
-		root->left = Insert(root->left, data);
+
+	BstNode<T>* getNewNode(int data){
+		BstNode<T>* newNode = new BstNode<T>();
+		newNode->data = data;
+		newNode->left = NULL;
+		newNode->right = NULL;
+		return newNode;
 	}
-	else {
-		root->right = Insert(root->right, data);
+
+	void insert(int data) {
+		if (root == NULL){
+			root = getNewNode(data);
+		}
+		//if data values are the same, the root will be saved to the left
+		else if (data <= root->data){
+			root->left = insert(data, root->left);
+		}
+		else {
+			root->right = insert(data, root->right);
+		}
 	}
-	//root must be returned, this root is currently out of scope
-	return root;
-}
+	BstNode<T>* insert(int data, BstNode<T>* root) {
+		if (root == NULL){
+			root = getNewNode(data);
+		}
+		//if data values are the same, the root will be saved to the left
+		else if (data <= root->data){
+			root->left = insert(data, root->left);
+		}
+		else {
+			root->right = insert(data, root->right);
+		}
+		return root;
+	}
 
-bool Search(BstNode* root, int data) {
-	if (root == NULL) return false3;
-	else if (root->data == data) return true;
-	else if (data <= root->data) return Search(root->left, data);
-	else return Search(root->right, data);
-}
-
-
+	bool search(int data) {
+		if (root == NULL) return false;
+		else if (root->data == data) return true;
+		else if (data <= root->data) return search(data, root->left);
+		else return search(data, root->right);
+	}
+	bool search(int data, BstNode<T>* root) {
+		if (root == NULL) return false;
+		else if (root->data == data) return true;
+		else if (data <= root->data) return search(data, root->left);
+		else return search(data, root->right);
+	}
+};
 
 int main(){
-	BstNode* root = NULL; //pointer stores the address of root node
-	root = Insert(root, 12);
-	root = Insert(root, 1);
-	root = Insert(root, 2);
-	root = Insert(root, 15);
-	root = Insert(root, 2);
-	root = Insert(root, 4);
-	root = Insert(root, 100);
+	BstRoot<int> root; //pointer stores the address of root node
+	root.insert(12);
+	root.insert(1);
+	root.insert(2);
+	root.insert(15);
+	root.insert(2);
+	root.insert(4);
+	root.insert(100);
 
 
 	int number = 0;
 	while (number != -1){
 		cout << "Enter a positive number to be searched, enter -1 to exit: \n";
 		cin >> number;
-		if (Search(root, number) == true) cout << "Found\n\n";
+		if (root.search(number) == true) cout << "Found\n\n";
 		else cout << "Not Found\n\n";
 	}
 
